@@ -136,9 +136,57 @@ Every artifact in this pipeline is traceable back to its origin. See **[docs/LIN
 
 ---
 
+## Infrastructure
+
+### Region
+
+**swedencentral** (Sweden, EU Data Boundary)
+
+Chosen for:
+- Strongest GDPR posture in Azure Europe — Swedish law + EU Data Boundary commitment
+- Access to GB300 and A100 SXM4 GPU families
+- Full Azure ML feature parity
+
+### Compute
+
+Primary training compute targets, in priority order:
+
+| SKU | GPU | GPUs / VM | Total VRAM | When to use |
+|---|---|---|---|---|
+| `ND128isr_GB300_v6` | NVIDIA GB300 (Blackwell) | 8 | 2,304 GB | Large-scale training — preferred |
+| `ND96amsr_A100_v4` | NVIDIA A100 SXM4 80 GB | 8 | 640 GB | Fallback if GB300 quota unavailable |
+| `NC96ads_A100_v4` | NVIDIA A100 PCIe 80 GB | 4 | 320 GB | Smaller jobs / budget runs |
+| `NC48ads_A100_v4` | NVIDIA A100 PCIe 80 GB | 2 | 160 GB | Fine-tuning |
+| `NC24ads_A100_v4` | NVIDIA A100 PCIe 80 GB | 1 | 80 GB | Single-GPU experiments |
+
+> **Note on H100:** `ND96isr_H100_v5` exists in swedencentral but requires a quota increase
+> request (`az quota create`) or EA/Reserved Instance agreement to unlock. GB300 supersedes
+> it in performance and is already available in this subscription.
+
+### Workspace setup
+
+```bash
+az group create --name mantyx-rg --location swedencentral
+az ml workspace create --name mantyx-ml --resource-group mantyx-rg
+az configure --defaults group=mantyx-rg workspace=mantyx-ml
+```
+
+Then add a `config.json` in the repo root:
+
+```json
+{
+  "subscription_id": "390fc122-22d8-4646-9468-8325c6c4ae79",
+  "resource_group": "mantyx-rg",
+  "workspace_name": "mantyx-ml"
+}
+```
+
+---
+
 ## Prerequisites
 
-- Azure subscription with Azure ML workspace
+- Azure subscription under the Mantyx tenant (`390fc122-22d8-4646-9468-8325c6c4ae79`)
 - Azure CLI installed and configured (`az login`)
+- Azure ML CLI extension (`az extension add -n ml`)
 - [uv](https://github.com/astral-sh/uv) for Python package management
 - `ffmpeg` installed locally (for the Silver → Gold step)
