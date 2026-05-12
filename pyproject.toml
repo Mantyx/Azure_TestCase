@@ -1,0 +1,17 @@
+[project]
+name = "azure-testcase"
+version = "0.1.0"
+description = "Azure ML training pipeline"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "azure-identity>=1.16.0",
+    "azure-storage-blob>=12.20.0",
+    "azureml-core>=1.56.0",
+    "azureml-mlflow>=1.56.0",
+    "pandas>=2.0.0",
+    "pillow>=12.2.0",
+    "pyarrow>=15.0.0",
+    "torch>=2.11.0",
+    "torchvision>=0.26.0",
+]
