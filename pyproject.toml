@@ -5,7 +5,9 @@ description = "Azure ML training pipeline"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "azure-ai-ml>=1.15.0",
     "azure-identity>=1.16.0",
+    "azure-mgmt-consumption>=10.0.0",
     "azure-storage-blob>=12.20.0",
     "azureml-core>=1.56.0",
     "azureml-mlflow>=1.56.0",
